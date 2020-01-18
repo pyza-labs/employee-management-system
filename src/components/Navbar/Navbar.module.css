@@ -1,0 +1,7 @@
+.nav {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  margin-bottom: 100px;
+  height: 80px;
+}

@@ -1,0 +1,16 @@
+.signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 100px auto auto auto;
+}
+.form {
+  margin: auto;
+}
+@media only screen and (min-width: 600px) {
+  .form {
+    margin: auto;
+    width: 100%;
+  }
+}
