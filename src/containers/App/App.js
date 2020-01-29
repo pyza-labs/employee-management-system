@@ -2,18 +2,22 @@ import React, { useState, useEffect, Fragment } from "react";
 import "./App.css";
 import LoginPage from "../LoginPage/LoginPage";
 import Navbar from "../../components/Navbar/Navbar";
-import firebase from "../../services/firebase/firebase";
-import HomeScreen from "../HomeScreen/HomeScreen";
 import { Router, navigate } from "@reach/router";
 import SignUp from "../SignUp/SignUp";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
+import EmployeeHome from "../Employee/EmployeeHome/EmployeeHome";
+import HrHome from "../HR/HrHome/HrHome";
+import { auth } from "firebase";
+import { firestore } from "firebase";
 
-function App() {
-  // const [isLogin = false, setIsLogin] = useState();
+const App = () => {
   const [fireUser = "", setFireUser] = useState();
+  const [role = "", setRole] = useState();
+  const [orgCode = "", setOrgCode] = useState();
+  const [name = "", setName] = useState();
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(firebaseUser => {
+    const unsubscribe = auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser) {
         console.log(firebaseUser);
         // setIsLogin(true);
@@ -27,28 +31,61 @@ function App() {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!fireUser.uid) {
+      return;
+    }
+    const unsubscribe = firestore()
+      .collection("users")
+      .doc(fireUser.uid)
+      .onSnapshot(doc => {
+        if (doc.exists) {
+          setName(doc.data().name);
+          setRole(doc.data().role);
+          setOrgCode(doc.data().orgCode);
+        } else {
+          console.log("SignUp in Progress");
+        }
+      });
+
+    return unsubscribe;
+  }, [fireUser]);
+
   const logoutHandler = () => {
-    firebase.auth().signOut();
+    if (!fireUser) {
+      return;
+    }
+    auth().signOut();
     alert("Logged Out Successfully");
+    setRole("");
+    setOrgCode("");
+    setName("");
     navigate("http://localhost:3000/");
   };
 
   return (
     <Fragment>
       <div className="App">
-        <Navbar logout={logoutHandler} />
+        <Navbar logout={logoutHandler} name={name} />
         <Router>
-          <LoginPage fireuser={fireUser} path="/" />
-          <SignUp path="signUp"></SignUp>
-          <ErrorPage path="error404"></ErrorPage>
-          <HomeScreen
+          <LoginPage
             fireuser={fireUser}
-            path={`homeScreen/${fireUser}`}
-          ></HomeScreen>
+            orgCode={orgCode}
+            role={role}
+            path="/"
+          />
+          <SignUp fireuser={fireUser} path="signUp"></SignUp>
+          <ErrorPage path="error404"></ErrorPage>
+          <EmployeeHome
+            fireuser={fireUser}
+            orgCode={orgCode}
+            path="employeeHome"
+          />
+          <HrHome fireuser={fireUser} orgCode={orgCode} path="hrHome" />
         </Router>
       </div>
     </Fragment>
   );
-}
+};
 
 export default App;

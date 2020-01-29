@@ -14,9 +14,8 @@ import {
   CountryDropdown,
   RegionDropdown
 } from "react-indian-state-region-selector";
-import firebase, { auth, cloud } from "../../services/firebase/firebase";
+import { auth, firestore, storage } from "firebase";
 import { navigate } from "@reach/router";
-import HomeScreen from "../HomeScreen/HomeScreen";
 
 const { Option } = Select;
 
@@ -24,20 +23,17 @@ const SignUp = props => {
   const [confirmDirty = false, setConfirmDirty] = useState();
   const [state, setState] = useState();
   const [region, setRegion] = useState();
-  const [role = "", setRole] = useState();
   const [email = "", setEmail] = useState();
 
   const uploadAttributes = {
     name: "file",
     customRequest: async ({ onError, onSuccess, file }) => {
-      const storageRef = firebase.storage().ref();
+      const storageRef = storage().ref();
       console.log("chocs");
       const metadata = {
         contentType: "image/jpeg"
       };
-      const uploadTask = storageRef.child(
-        `${role}/${email}/images/${file.name}`
-      );
+      const uploadTask = storageRef.child(`${email}/images/${file.name}`);
       try {
         const image = await uploadTask.put(file, metadata);
         onSuccess(null, image);
@@ -86,13 +82,13 @@ const SignUp = props => {
     props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log("Received values of form: ", values);
-        setRole(values.role);
-        cloud
-          .collection(values.role)
-          .doc(values.email)
+        firestore()
+          .collection("users")
+          .doc(props.fireuser.uid)
           .set({
             name: values.name,
             email: values.email,
+            orgCode: values.orgCode,
             role: values.role,
             bio: values.bio,
             pan: values.pan,
@@ -100,17 +96,17 @@ const SignUp = props => {
             state: state,
             region: region
           })
-          .then(function() {
-            const promise = auth.createUserWithEmailAndPassword(
-              values.email,
-              values.confirm
-            );
-            promise.catch(error => console.log(error.message));
+          .then(() => {
             alert("it's done");
             console.log("Written");
-            navigate(`http://localhost:3000/homeScreen`);
+            if (values.role === "hr") navigate(`http://localhost:3000/hrHome`);
+            else if (values.role === "employee") {
+              navigate(`http://localhost:3000/employeeHome`);
+            } else if (values.role === "accounts") {
+              navigate(`http://localhost:3000/accountsHome`);
+            }
           })
-          .catch(function(error) {
+          .catch(error => {
             console.error("Error writing document: ", error);
           });
       } else {
@@ -129,6 +125,8 @@ const SignUp = props => {
     if (value && value !== form.getFieldValue("password")) {
       callback("Two passwords that you enter is inconsistent!");
     } else {
+      const promise = auth().createUserWithEmailAndPassword(email, value);
+      promise.catch(error => console.log(error.message));
       callback();
     }
   };
@@ -234,6 +232,16 @@ const SignUp = props => {
             ]
           })(<Input.Password onBlur={handleConfirmBlur} />)}
         </Form.Item>
+        <Form.Item label="Organisation Code">
+          {getFieldDecorator("orgCode", {
+            rules: [
+              {
+                required: true,
+                message: "Please input your Organisation Code!"
+              }
+            ]
+          })(<Input />)}
+        </Form.Item>
         <Form.Item label="Role">
           {getFieldDecorator("role", {
             rules: [
@@ -243,12 +251,7 @@ const SignUp = props => {
               }
             ]
           })(
-            <Select
-              placeholder="Please Select your Role"
-              onChange={event => {
-                return setRole(event);
-              }}
-            >
+            <Select placeholder="Please Select your Role">
               <Option value="hr">HR</Option>
               <Option value="accounts">Accounts</Option>
               <Option value="employee">Employee</Option>

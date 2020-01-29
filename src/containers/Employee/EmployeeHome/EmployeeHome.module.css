@@ -1,0 +1,18 @@
+.content {
+  background: #fff;
+  padding: 24px;
+  margin: 0;
+  min-height: 280px;
+}
+.cardDiv {
+  background: #ececec;
+  padding: 30px;
+  margin: 8px;
+}
+.important {
+  color: red;
+}
+.savedDiv {
+  display: flex;
+  justify-content: center;
+}

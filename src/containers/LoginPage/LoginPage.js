@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Styles from "./LoginPage.module.css";
-import { Input, Button } from "antd";
-import { auth } from "../../services/firebase/firebase";
+import { Input, Button, Skeleton } from "antd";
+import { auth } from "firebase";
 import { navigate, Link } from "@reach/router";
 
 const LoginPage = props => {
   const [email = "", setEmail] = useState();
   const [pass = "", setPass] = useState();
   const [code = "", setCode] = useState();
+  const [loading = false, setLoading] = useState();
 
   const emailHandler = event => {
-    setEmail(event.target.value);
+    setEmail(event.target.value.trim());
   };
 
   const passHandler = event => {
@@ -21,15 +22,31 @@ const LoginPage = props => {
     setCode(event.target.value);
   };
 
-  const loginHandler = event => {
-    if (code === "0108") {
-      const promise = auth.signInWithEmailAndPassword(email, pass);
-      promise.catch(error => alert(error.message));
-      navigate(`homeScreen/${props.fireuser}`);
+  useEffect(() => {
+    if (!props.orgCode) {
+      return;
+    }
+    console.log(props.orgCode);
+    if (props.orgCode === code) {
+      if (props.role === "hr") {
+        navigate("hrHome");
+      } else if (props.role === "employee") {
+        navigate("employeeHome");
+      } else if (props.role === "accounts") {
+        alert("Work in Progress");
+      }
     } else {
       alert("Wrong Organisational Code");
+      auth().signOut();
       navigate("error404");
     }
+  }, [props.orgCode, props.role]);
+
+  const loginHandler = async event => {
+    setLoading(true);
+    await auth()
+      .signInWithEmailAndPassword(email, pass)
+      .catch(error => alert(error.message));
   };
 
   const forgotPassHandler = () => {
@@ -37,12 +54,12 @@ const LoginPage = props => {
       alert("No Email Entered");
       return;
     }
-    auth
+    auth()
       .sendPasswordResetEmail(email)
-      .then(function() {
+      .then(() => {
         alert("Email Sent");
       })
-      .catch(function(error) {
+      .catch(error => {
         // An error happened.
       });
   };
@@ -67,15 +84,14 @@ const LoginPage = props => {
         ></Input.Password>
       </div>
       <div className={Styles.buttonDiv}>
-        {email && pass && code ? (
-          <Button className={Styles.button} onClick={loginHandler}>
-            SignIn
-          </Button>
-        ) : (
-          <Button className={Styles.button} onClick={loginHandler} disabled>
-            SignIn
-          </Button>
-        )}
+        <Button
+          loading={loading}
+          className={Styles.button}
+          onClick={loginHandler}
+          disabled={!email || !pass || !code}
+        >
+          SignIn
+        </Button>
         <Button className={Styles.button}>
           <Link to="signUp">SignUp</Link>
         </Button>
