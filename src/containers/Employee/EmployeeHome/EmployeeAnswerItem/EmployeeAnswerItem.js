@@ -147,7 +147,7 @@ const EmployeeAnswerItem = props => {
         );
       case "mcq":
         return (
-          <div className={Styles.inputDiv}>
+          <div className={Styles.mcqOption}>
             <Radio.Group
               name="radiogroup"
               key={radio}

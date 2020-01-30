@@ -142,7 +142,7 @@ const HrAddQuestion = props => {
             })(
               <div>
                 <Input onChange={inputOptionHandler} value={text} />
-                <div className={Styles.buttonDiv}>
+                <div className={Styles.addOptionWrapper}>
                   <div>
                     <Button
                       className={Styles.button}
@@ -193,7 +193,7 @@ const HrAddQuestion = props => {
           )}
         </Form.Item>
         <Form.Item {...addButtonLayout}>
-          <div className={Styles.buttonDiv}>
+          <div className={Styles.addOptionWrapper}>
             <div>
               <Button className={Styles.button} htmlType="submit">
                 Add

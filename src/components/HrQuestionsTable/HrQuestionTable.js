@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Button, Switch, Table, Tag } from "antd";
+import { Icon, Button, Switch, Table, Tag, Popconfirm, message } from "antd";
 import { firestore } from "firebase";
 const HrQuestionsTable = props => {
   const columns = [
@@ -49,9 +49,15 @@ const HrQuestionsTable = props => {
       key: "x",
       render: (text, record, index) => {
         return (
-          <Button onClick={() => deleteQuestionHandler(record.key)}>
-            Delete
-          </Button>
+          <Popconfirm
+            title="Are you sure delete this task?"
+            onConfirm={() => deleteQuestionHandler(record.key)}
+            onCancel={() => console.log("Delete Cancelled")}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button>Delete</Button>
+          </Popconfirm>
         );
       }
     }
@@ -80,6 +86,7 @@ const HrQuestionsTable = props => {
       .delete()
       .then(function() {
         console.log("Document successfully deleted!");
+        message.success("Question deleted successfully");
       })
       .catch(function(error) {
         console.error("Error removing document: ", error);

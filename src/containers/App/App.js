@@ -63,6 +63,19 @@ const App = () => {
     navigate("http://localhost:3000/");
   };
 
+  const homeSwitch = () => {
+    switch (role) {
+      case "hr":
+        return <HrHome fireuser={fireUser} orgCode={orgCode} path="home" />;
+      case "employee":
+        return (
+          <EmployeeHome fireuser={fireUser} orgCode={orgCode} path="home" />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Fragment>
       <div className="App">
@@ -74,14 +87,9 @@ const App = () => {
             role={role}
             path="/"
           />
-          <SignUp fireuser={fireUser} path="signUp"></SignUp>
+          <SignUp fireuser={fireUser} path="signup"></SignUp>
+          {homeSwitch()}
           <ErrorPage path="error404"></ErrorPage>
-          <EmployeeHome
-            fireuser={fireUser}
-            orgCode={orgCode}
-            path="employeeHome"
-          />
-          <HrHome fireuser={fireUser} orgCode={orgCode} path="hrHome" />
         </Router>
       </div>
     </Fragment>

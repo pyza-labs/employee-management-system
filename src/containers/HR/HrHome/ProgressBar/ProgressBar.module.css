@@ -1,7 +1,7 @@
-.progressDiv {
+.rowData {
   margin: 8px;
 }
-.progressDiv:hover {
+.rowData:hover {
   cursor: pointer;
   color: #1890ff;
 }
@@ -10,10 +10,10 @@
   font-size: 12px;
   font-weight: 500;
 }
-.popoverDiv {
+.popover {
   display: flex;
 }
-.questionDiv {
+.questionWrapper {
   display: flex;
   flex-direction: column;
   margin-right: 4px;

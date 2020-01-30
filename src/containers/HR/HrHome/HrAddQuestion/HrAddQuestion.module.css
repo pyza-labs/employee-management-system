@@ -10,7 +10,7 @@
 .important {
   margin-left: 10px;
 }
-.buttonDiv {
+.addOptionWrapper {
   display: flex;
   margin: 2px;
   justify-content: space-between;

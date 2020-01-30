@@ -16,9 +16,9 @@ const Navbar = props => {
         title="Pyza Labs"
         subTitle="Employee Management System"
       ></PageHeader>
-      <div className={Styles.subDiv}>
+      <div className={Styles.subWrapper}>
         {props.name && (
-          <div className={Styles.avatarDiv}>
+          <div className={Styles.avatarWrapper}>
             <Avatar src="" />
             <span className={Styles.name}>{props.name}</span>
           </div>

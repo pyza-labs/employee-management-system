@@ -5,7 +5,7 @@
   margin: 50px auto auto auto;
 }
 
-.inputDiv {
+.loginInfo {
   width: 300px;
 }
 
@@ -17,7 +17,7 @@
   border-right: 0 none;
 }
 
-.buttonDiv {
+.submitInfo {
   margin-top: 4px;
 }
 

@@ -28,19 +28,13 @@ const LoginPage = props => {
     }
     console.log(props.orgCode);
     if (props.orgCode === code) {
-      if (props.role === "hr") {
-        navigate("hrHome");
-      } else if (props.role === "employee") {
-        navigate("employeeHome");
-      } else if (props.role === "accounts") {
-        alert("Work in Progress");
-      }
+      navigate("home");
     } else {
       alert("Wrong Organisational Code");
       auth().signOut();
       navigate("error404");
     }
-  }, [props.orgCode, props.role]);
+  }, [props.orgCode]);
 
   const loginHandler = async event => {
     setLoading(true);
@@ -66,7 +60,7 @@ const LoginPage = props => {
 
   return (
     <div className={Styles.login}>
-      <div className={Styles.inputDiv}>
+      <div className={Styles.loginInfo}>
         <Input
           placeholder="Email"
           className={Styles.input}
@@ -83,7 +77,7 @@ const LoginPage = props => {
           onChange={codeHandler}
         ></Input.Password>
       </div>
-      <div className={Styles.buttonDiv}>
+      <div className={Styles.submitInfo}>
         <Button
           loading={loading}
           className={Styles.button}
@@ -93,7 +87,7 @@ const LoginPage = props => {
           SignIn
         </Button>
         <Button className={Styles.button}>
-          <Link to="signUp">SignUp</Link>
+          <Link to="signup">SignUp</Link>
         </Button>
         <a className={Styles.forgot} onClick={forgotPassHandler} href>
           Forgot Password

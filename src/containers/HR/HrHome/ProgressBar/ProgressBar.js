@@ -42,12 +42,12 @@ const ProgressBar = props => {
     console.log(data.response.length);
     let content = data.response.map((res, index) => {
       return (
-        <div key={res.id} className={Styles.popoverDiv}>
-          <div className={Styles.questionDiv}>
+        <div key={res.id} className={Styles.popover}>
+          <div className={Styles.questionWrapper}>
             <h5>Question {index + 1}</h5>
             <h5>Answer</h5>
           </div>
-          <div className={Styles.questionDiv}>
+          <div className={Styles.questionWrapper}>
             <h5>{res.data.question}</h5>
             <h5>{res.data.answer}</h5>
           </div>
@@ -63,7 +63,7 @@ const ProgressBar = props => {
         trigger="click"
         key={data.userId}
       >
-        <Row className={Styles.progressDiv} gutter={16}>
+        <Row className={Styles.rowData} gutter={16}>
           <Col span={12}>
             <span className={Styles.name}>{data.name}</span>
             <Progress

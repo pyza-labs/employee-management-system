@@ -73,6 +73,9 @@ const EmployeeHome = props => {
           <Layout style={{ padding: "0 24px 24px" }}>
             <h1 style={{ margin: "16px 0" }}>{selectedOption}</h1>
             <Content className={Styles.content}>
+              <div className={Styles.savedWrapper}>
+                {saveStatus ? "Saved" : ""}
+              </div>
               {questions.length !== 0 && (
                 <List
                   itemLayout="horizontal"
@@ -103,11 +106,6 @@ const EmployeeHome = props => {
                     );
                   }}
                 />
-              )}
-              {saveStatus && (
-                <div className={Styles.savedDiv}>
-                  <Tag color="geekblue">Saved</Tag>
-                </div>
               )}
             </Content>
           </Layout>

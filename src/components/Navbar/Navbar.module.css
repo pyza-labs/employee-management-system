@@ -8,11 +8,11 @@
   flex: 1;
   height: 100%;
 }
-.subDiv {
+.subWrapper {
   display: flex;
   align-items: center;
 }
-.avatarDiv {
+.avatarWrapper {
   margin-right: 30px;
   align-items: center;
   justify-content: center;
